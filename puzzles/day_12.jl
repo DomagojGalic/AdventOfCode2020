@@ -41,9 +41,9 @@ function move!(boat::Boat, direction::Char, magnitude::Int64)
         'E' => begin boat.position_east += magnitude end
         'W' => begin boat.position_east -= magnitude end
 
-        # modulus can return value < 0
-        'L' => begin boat.heading = (boat.heading - magnitude + 360) % 360 end
-        'R' => begin boat.heading = (boat.heading + magnitude + 360) % 360 end
+        # % can return value < 0, mod can't
+        'L' => begin boat.heading = mod(boat.heading - magnitude, 360) end
+        'R' => begin boat.heading = mod(boat.heading + magnitude, 360) end
     end
 end
 
@@ -89,9 +89,6 @@ function boatPositionWaypoint(path::String)
 
     for (direction, magnitude) in directions
         move!(boat, waypoint, direction, magnitude)
-        #println("direction: ", direction, ", magnitude: ", magnitude)
-        #println("boat: ", boat)
-        #println("waypoint: ", waypoint, "\n")
     end
 
     return abs(boat.position_north) + abs(boat.position_east)
